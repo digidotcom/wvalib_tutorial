@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">WVA Sample</string>
+    <string name="wva_connect_unknown">Waiting to connect.</string>
+    <string name="wva_connect_ok">WVA connection established!</string>
+    <string name="wva_connect_error">Cannot connect to WVA!</string>
+    <string name="action_settings">Settings</string>
+
+</resources>
