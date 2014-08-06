@@ -14,4 +14,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Time"
+        android:id="@+id/set_time_button"
+        android:layout_below="@+id/connection_status_text"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="50dp" />
+
+    <DigitalClock
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/digitalClock"
+        android:layout_alignTop="@+id/set_time_button"
+        android:layout_toRightOf="@+id/set_time_button"
+        android:layout_toEndOf="@+id/set_time_button" />
+
+
 </RelativeLayout>

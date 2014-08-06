@@ -11,9 +11,15 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.digi.wva.async.WvaCallback;
+import com.digi.wva.WVA;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 
 public class WVAActivity extends Activity {
@@ -47,6 +53,30 @@ public class WVAActivity extends Activity {
             }
         });
 
+        /*
+        Add button to allow the user to set time on the WVA
+         */
+        final Button time_button = (Button) findViewById(R.id.set_time_button);
+        time_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                time_button_clicked(wvaapp);
+            }
+        });
+    }
+
+    private void time_button_clicked(WVAApplication wvaapp) {
+        WVA wva = wvaapp.getWVA();
+        DateTime now = new DateTime();
+
+        wva.setTime(now, new WvaCallback<DateTime>() {
+            @Override
+            public void onResponse(Throwable error, DateTime dateTime) {
+                if(error != null) {
+                    error.printStackTrace();
+                }
+            }
+        });
     }
 
 
