@@ -15,11 +15,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.digi.wva.async.VehicleDataResponse;
 import com.digi.wva.async.WvaCallback;
 import com.digi.wva.WVA;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 
 
 public class WVAActivity extends Activity {
@@ -63,6 +63,17 @@ public class WVAActivity extends Activity {
                 time_button_clicked(wvaapp);
             }
         });
+
+        /*
+        Add button to allow the user to fetch a vehicle data value from the WVA
+         */
+        final Button data_button = (Button) findViewById(R.id.fetch_data_button);
+        data_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                data_button_clicked(wvaapp);
+            }
+        });
     }
 
     private void time_button_clicked(WVAApplication wvaapp) {
@@ -79,6 +90,23 @@ public class WVAActivity extends Activity {
         });
     }
 
+    private void data_button_clicked(WVAApplication wvaapp) {
+        WVA wva = wvaapp.getWVA();
+        String endpoint = "EngineSpeed";
+
+        final TextView value_view = (TextView) findViewById(R.id.vehicle_data_value);
+
+        wva.fetchVehicleData(endpoint, new WvaCallback<VehicleDataResponse>() {
+            @Override
+            public void onResponse(Throwable error, VehicleDataResponse response) {
+                if (error != null) {
+                    error.printStackTrace();
+                } else {
+                    value_view.setText(Double.toString(response.getValue()));
+                }
+            }
+        });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

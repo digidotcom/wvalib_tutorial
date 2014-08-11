@@ -32,5 +32,22 @@
         android:layout_toRightOf="@+id/set_time_button"
         android:layout_toEndOf="@+id/set_time_button" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fetch EngineSpeed"
+        android:id="@+id/fetch_data_button"
+        android:layout_below="@+id/set_time_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="50dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/vehicle_data_value"
+        android:layout_alignTop="@id/fetch_data_button"
+        android:layout_toRightOf="@+id/fetch_data_button"
+        android:layout_toEndOf="@+id/fetch_data_button"/>
 
 </RelativeLayout>
