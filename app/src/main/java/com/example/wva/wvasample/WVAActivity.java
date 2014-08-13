@@ -14,12 +14,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.digi.wva.async.VehicleDataResponse;
 import com.digi.wva.async.WvaCallback;
 import com.digi.wva.WVA;
 
 import org.joda.time.DateTime;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class WVAActivity extends Activity {
@@ -74,6 +77,29 @@ public class WVAActivity extends Activity {
                 data_button_clicked(wvaapp);
             }
         });
+
+        /*
+        Add buttons to allow the user to enable/disable the HTTP web server.
+         */
+        final Button enable_http_button = (Button) findViewById(R.id.enable_http_button);
+        final Button disable_http_button = (Button) findViewById(R.id.disable_http_button);
+
+        View.OnClickListener httpClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.enable_http_button:
+                        enable_http_clicked(wvaapp);
+                        break;
+                    case R.id.disable_http_button:
+                        disable_http_clicked(wvaapp);
+                        break;
+                }
+            }
+        };
+
+        enable_http_button.setOnClickListener(httpClick);
+        disable_http_button.setOnClickListener(httpClick);
     }
 
     private void time_button_clicked(WVAApplication wvaapp) {
@@ -103,6 +129,58 @@ public class WVAActivity extends Activity {
                     error.printStackTrace();
                 } else {
                     value_view.setText(Double.toString(response.getValue()));
+                }
+            }
+        });
+    }
+
+    private void enable_http_clicked(WVAApplication wvaapp) {
+        WVA wva = wvaapp.getWVA();
+
+        // Build the JSON data to be sent as part of the request.
+        JSONObject json = new JSONObject();
+        try {
+            json.put("enable", "on");
+            json.put("port", 80);
+        } catch (JSONException e) {
+            // Unexpected error
+            e.printStackTrace();
+            return;
+        }
+
+        wva.configure("http", json, new WvaCallback<Void>() {
+            @Override
+            public void onResponse(Throwable error, Void response) {
+                if (error != null) {
+                    error.printStackTrace();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Enabled HTTP server", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void disable_http_clicked(WVAApplication wvaapp) {
+        WVA wva = wvaapp.getWVA();
+
+        // Build the JSON data to be sent as part of the request.
+        JSONObject json = new JSONObject();
+        try {
+            json.put("enable", "off");
+            json.put("port", 80);
+        } catch (JSONException e) {
+            // Unexpected error
+            e.printStackTrace();
+            return;
+        }
+
+        wva.configure("http", json, new WvaCallback<Void>() {
+            @Override
+            public void onResponse(Throwable error, Void response) {
+                if (error != null) {
+                    error.printStackTrace();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Disabled HTTP server", Toast.LENGTH_SHORT).show();
                 }
             }
         });

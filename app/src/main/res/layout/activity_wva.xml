@@ -50,4 +50,23 @@
         android:layout_toRightOf="@+id/fetch_data_button"
         android:layout_toEndOf="@+id/fetch_data_button"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enable HTTP"
+        android:id="@+id/enable_http_button"
+        android:layout_below="@+id/fetch_data_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="50dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Disable HTTP"
+        android:id="@+id/disable_http_button"
+        android:layout_alignTop="@+id/enable_http_button"
+        android:layout_toRightOf="@+id/enable_http_button"
+        android:layout_toEndOf="@+id/enable_http_button" />
+
 </RelativeLayout>
