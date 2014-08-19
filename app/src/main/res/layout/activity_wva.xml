@@ -69,4 +69,22 @@
         android:layout_toRightOf="@+id/enable_http_button"
         android:layout_toEndOf="@+id/enable_http_button" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Subscribe"
+        android:id="@+id/subscribe_button"
+        android:layout_below="@+id/enable_http_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="50dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/engine_speed_value"
+        android:layout_alignTop="@+id/subscribe_button"
+        android:layout_toRightOf="@+id/subscribe_button"
+        android:layout_toEndOf="@+id/subscribe_button" />
+
 </RelativeLayout>

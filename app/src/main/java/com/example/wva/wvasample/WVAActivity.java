@@ -9,6 +9,7 @@ package com.example.wva.wvasample;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +17,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.digi.wva.async.VehicleDataEvent;
+import com.digi.wva.async.VehicleDataListener;
 import com.digi.wva.async.VehicleDataResponse;
 import com.digi.wva.async.WvaCallback;
 import com.digi.wva.WVA;
@@ -100,6 +103,42 @@ public class WVAActivity extends Activity {
 
         enable_http_button.setOnClickListener(httpClick);
         disable_http_button.setOnClickListener(httpClick);
+
+        /*
+         * Add button to allow the user to subscribe to EngineSpeed, and a text view to see
+         * its value.
+         */
+        final Button subscribe_button = (Button) findViewById(R.id.subscribe_button);
+        final TextView engine_speed_value = (TextView) findViewById(R.id.engine_speed_value);
+
+        /*
+         Set the listener that will be called each time a new EngineSpeed value arrives via the
+         event channel. This will update the displayed EngineSpeed value.
+         */
+        wvaapp.getWVA().setVehicleDataListener("EngineSpeed", new VehicleDataListener() {
+            @Override
+            public void onEvent(VehicleDataEvent event) {
+                VehicleDataResponse response = event.getResponse();
+                Log.i("WVA Tutorial", "EngineSpeed value: " + response.getValue());
+                engine_speed_value.setText(String.format("EngineSpeed = %.3f\n%s", response.getValue(), response.getTime().toString()));
+            }
+        });
+
+        subscribe_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                subscribe_to_enginespeed(wvaapp);
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Clear out the EngineSpeed listener, since this activity has been destroyed and we
+        // should drop all references to its views.
+        ((WVAApplication) getApplication()).getWVA().removeVehicleDataListener("EngineSpeed");
     }
 
     private void time_button_clicked(WVAApplication wvaapp) {
@@ -181,6 +220,21 @@ public class WVAActivity extends Activity {
                     error.printStackTrace();
                 } else {
                     Toast.makeText(getApplicationContext(), "Disabled HTTP server", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void subscribe_to_enginespeed(WVAApplication wvaapp) {
+        WVA wva = wvaapp.getWVA();
+
+        wva.subscribeToVehicleData("EngineSpeed", 15, new WvaCallback<Void>() {
+            @Override
+            public void onResponse(Throwable error, Void response) {
+                if (error != null) {
+                    error.printStackTrace();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Subscribed to EngineSpeed", Toast.LENGTH_SHORT).show();
                 }
             }
         });

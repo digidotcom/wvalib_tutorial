@@ -8,8 +8,12 @@
 package com.example.wva.wvasample;
 
 import android.app.Application;
+import android.widget.Toast;
 
+import com.digi.wva.async.EventChannelStateListener;
 import com.digi.wva.WVA;
+
+import java.io.IOException;
 
 public class WVAApplication extends Application {
 
@@ -28,6 +32,33 @@ public class WVAApplication extends Application {
         wva = new WVA(wva_ip);
         // Replace the username and password to match that of your WVA.
         wva.useBasicAuth("admin", "admin").useSecureHttp(true);
-    }
 
+        // Set the listener used to report the state of the event channel connection.
+        wva.setEventChannelStateListener(new EventChannelStateListener() {
+            @Override
+            public void onConnected(WVA device) {
+                Toast.makeText(getApplicationContext(), "Event channel connected!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(WVA device, IOException error) {
+                error.printStackTrace();
+                device.disconnectEventChannel(true);
+            }
+
+            @Override
+            public void onRemoteClose(WVA device, int port) {
+                Toast.makeText(getApplicationContext(), "Event channel closed on remote side. Reconnecting...", Toast.LENGTH_SHORT).show();
+
+                reconnectAfter(device, 15000, port);
+            }
+
+            @Override
+            public void onFailedConnection(WVA device, int port) {
+                Toast.makeText(getApplicationContext(), "Could not connect to event channel", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        wva.connectEventChannel(5000);
+    }
 }
