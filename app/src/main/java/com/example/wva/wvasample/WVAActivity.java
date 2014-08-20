@@ -17,11 +17,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.digi.wva.WVA;
+import com.digi.wva.async.AlarmType;
+import com.digi.wva.async.EventFactory;
 import com.digi.wva.async.VehicleDataEvent;
 import com.digi.wva.async.VehicleDataListener;
 import com.digi.wva.async.VehicleDataResponse;
 import com.digi.wva.async.WvaCallback;
-import com.digi.wva.WVA;
 
 import org.joda.time.DateTime;
 import org.json.JSONException;
@@ -112,6 +114,11 @@ public class WVAActivity extends Activity {
         final TextView engine_speed_value = (TextView) findViewById(R.id.engine_speed_value);
 
         /*
+        Add a text view to display the values from EngineSpeed alarms.
+         */
+        final TextView engine_speed_alarm_value = (TextView) findViewById(R.id.engine_speed_alarm_value);
+
+        /*
          Set the listener that will be called each time a new EngineSpeed value arrives via the
          event channel. This will update the displayed EngineSpeed value.
          */
@@ -119,8 +126,15 @@ public class WVAActivity extends Activity {
             @Override
             public void onEvent(VehicleDataEvent event) {
                 VehicleDataResponse response = event.getResponse();
-                Log.i("WVA Tutorial", "EngineSpeed value: " + response.getValue());
-                engine_speed_value.setText(String.format("EngineSpeed = %.3f\n%s", response.getValue(), response.getTime().toString()));
+
+                if (event.getType() == EventFactory.Type.SUBSCRIPTION) {
+                    Log.i("WVA Tutorial", "EngineSpeed value: " + response.getValue());
+                    engine_speed_value.setText(String.format("EngineSpeed = %.3f\n%s", response.getValue(), response.getTime().toString()));
+                }
+                else if (event.getType() == EventFactory.Type.ALARM) {
+                    Log.i("WVA Tutorial", "EngineSpeed alarm value: " + response.getValue());
+                    engine_speed_alarm_value.setText(String.format("EngineSpeed (Alarm) = %.3f\n%s", response.getValue(), response.getTime().toString()));
+                }
             }
         });
 
@@ -128,6 +142,17 @@ public class WVAActivity extends Activity {
             @Override
             public void onClick(View view) {
                 subscribe_to_enginespeed(wvaapp);
+            }
+        });
+
+        wvaapp.getWVA().createVehicleDataAlarm("EngineSpeed", AlarmType.ABOVE, 1000, 10, new WvaCallback<Void>() {
+            @Override
+            public void onResponse(Throwable error, Void response) {
+                if (error != null) {
+                    error.printStackTrace();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Created alarm on EngineSpeed", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

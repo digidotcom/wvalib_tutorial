@@ -87,4 +87,13 @@
         android:layout_toRightOf="@+id/subscribe_button"
         android:layout_toEndOf="@+id/subscribe_button" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/engine_speed_alarm_value"
+        android:layout_below="@+id/subscribe_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="30dp" />
+
 </RelativeLayout>
